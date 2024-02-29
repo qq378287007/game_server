@@ -1,6 +1,6 @@
 var net = require('net');
 
-class Role{
+class Role {
     constructor() {
         this.x = 0;
         this.y = 0;
@@ -9,24 +9,24 @@ class Role{
 
 var roles = new Map();
 
-var server = net.createServer(function(socket){
-    //ĞÂÁ¬½Ó
+var server = net.createServer(function (socket) {
+    //æ–°è¿æ¥
     roles.set(socket, new Role())
 
-    //½ÓÊÕµ½Êı¾İ
-    socket.on('data', function(data){
+    //æ¥æ”¶åˆ°æ•°æ®
+    socket.on('data', function (data) {
         var role = roles.get(socket);
         var cmd = String(data);
-        //¸üĞÂÎ»ÖÃ
-        if(cmd == "left\r\n") role.x--;
-        else if(cmd == "right\r\n") role.x++;
-        else if(cmd == "up\r\n") role.y--;
-        else if(cmd == "down\r\n") role.y++;
-		else { 
+        //æ›´æ–°ä½ç½®
+        if (cmd == "left\r\n") role.x--;
+        else if (cmd == "right\r\n") role.x++;
+        else if (cmd == "up\r\n") role.y--;
+        else if (cmd == "down\r\n") role.y++;
+        else {
             chatSocket.write(data);
             return;
         };
-        //¹ã²¥
+        //å¹¿æ’­
         for (let s of roles.keys()) {
             var id = socket.remotePort;
             var str = id + " move to " + role.x + " " + role.y + "\n";
@@ -34,8 +34,8 @@ var server = net.createServer(function(socket){
         }
     });
 
-    //¶Ï¿ªÁ¬½Ó
-    socket.on('close',function(){
+    //æ–­å¼€è¿æ¥
+    socket.on('close', function () {
         roles.delete(socket)
     });
 });
@@ -43,8 +43,8 @@ var server = net.createServer(function(socket){
 server.listen(8001);
 
 
-var chatSocket = net.connect({port: 8010}, function() {});
-chatSocket.on('data', function(data){
+var chatSocket = net.connect({ port: 8010 }, function () { });
+chatSocket.on('data', function (data) {
     for (let s of roles.keys()) {
         s.write(data);
     }
