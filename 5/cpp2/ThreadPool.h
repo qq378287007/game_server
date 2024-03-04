@@ -88,7 +88,7 @@ public:
     }
 
     // 增删服务
-    uint32_t NewService(shared_ptr<string> type)
+    uint32_t AddService(shared_ptr<string> type)
     {
         shared_ptr<Service> srv(new Service());
         srv->type = type;
@@ -102,7 +102,7 @@ public:
         return srv->id;
     }
 
-    void KillService(uint32_t id) // 仅限服务自己调用
+    void RemoveService(uint32_t id) // 仅限服务自己调用
     {
         shared_ptr<Service> srv = GetService(id);
         if (!srv)
@@ -180,8 +180,8 @@ private:
     {
         shared_ptr<Service> srv = nullptr;
         shared_lock<shared_mutex> lock(services_mtx);
-        unordered_map<uint32_t, shared_ptr<Service>>::iterator iter = services.find(id);
-        if (iter != services.end())
+        unordered_map<uint32_t, shared_ptr<Service>>::const_iterator iter = services.find(id);
+        if (iter != services.cend())
             srv = iter->second;
         lock.unlock();
         return srv;
