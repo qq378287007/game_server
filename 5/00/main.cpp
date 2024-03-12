@@ -15,8 +15,9 @@ int main()
                 cout << "hello " << i << endl;
                 this_thread::sleep_for(chrono::seconds(1));
                 cout << "world " << i << endl;
-                return i*i; })
-            );
+                return i*i; 
+            })
+        );
     }
 
     for (auto &&result : results)

@@ -28,5 +28,8 @@ void Sunnet::Wait()
 void Sunnet::StartWorker()
 {
     for (size_t i = 0; i < WORKER_NUM; i++)
-        workerThreads.emplace_back(Worker{i, (size_t)2 << i});
+    {
+        workers.emplace_back(i, (size_t)2 << i);
+        workerThreads.emplace_back(workers[i]);
+    }
 }

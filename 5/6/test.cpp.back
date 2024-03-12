@@ -1,0 +1,33 @@
+#include <vector>
+#include <thread>
+#include <iostream>
+using namespace std;
+
+struct Worker
+{
+public:
+    int id;      // 编号
+    int eachNum; // 每次处理多少条消息
+    Worker(int a, int b)
+        : id(a), eachNum(b) {}
+    void operator()() const
+    {
+    }
+};
+
+int main()
+{
+    vector<Worker> workers;       // worker对象
+    vector<thread> workerThreads; // 工作线程
+
+    workers.emplace_back(1, 2);
+    workerThreads.emplace_back(workers[0]);
+
+    cout << workers.size() << endl;
+    cout << workers[0].id << endl;
+    cout << workers[0].eachNum << endl;
+
+    workerThreads[0].join();
+
+    return 0;
+}

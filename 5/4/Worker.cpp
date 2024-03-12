@@ -11,6 +11,6 @@ void Worker::operator()()
     while (true)
     {
         cout << "working id: " << id << endl;
-        this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(chrono::seconds(1));
     }
 }

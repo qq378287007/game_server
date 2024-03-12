@@ -4,7 +4,6 @@ using namespace std;
 
 Sunnet *Sunnet::inst()
 {
-
     static Sunnet instance;
     return &instance;
 }

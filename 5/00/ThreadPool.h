@@ -20,9 +20,9 @@ class ThreadPool
     bool stop{false};
 
 public:
-    ThreadPool(size_t threads = thread::hardware_concurrency())
+    ThreadPool(size_t thread_num = thread::hardware_concurrency())
     {
-        for (size_t i = 0; i < threads; ++i)
+        for (size_t i = 0; i < thread_num; ++i)
             workers.emplace_back([this]{
                     while (true)
                     {
