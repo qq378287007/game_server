@@ -1,5 +1,4 @@
 #include <iostream>
-#include "Sunnet.h"
 #include "Service.h"
 using namespace std;
 
@@ -15,8 +14,7 @@ void Service::OnMsg(shared_ptr<BaseMsg> msg)
     msg->run();
 
     this_thread::sleep_for(chrono::milliseconds(100));
-    shared_ptr<BaseMsg> msgRet(new BaseMsg(id, msg->from, "ping"));
-    Sunnet::inst()->Send(msgRet);
+    //pool.Send(make_shared<BaseMsg>(id, msg->from, "ping"));
 }
 // 退出服务时触发
 void Service::OnExit()
@@ -51,16 +49,10 @@ bool Service::ProcessMsg()
     OnMsg(msg);
     return true;
 }
-void Service::ProcessMsgs(int max)
-{
-    for (int i = 0; i < max; i++)
-        if (!ProcessMsg())
-            return;
-}
 
 void Service::SetInGlobal(bool isIn)
 {
-    inGlobalLock.lock();
+    inGlobal_mtx.lock();
     inGlobal = isIn;
-    inGlobalLock.unlock();
+    inGlobal_mtx.unlock();
 }

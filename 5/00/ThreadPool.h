@@ -20,26 +20,26 @@ class ThreadPool
     bool stop{false};
 
 public:
-    ThreadPool(size_t thread_num = thread::hardware_concurrency())
+    ThreadPool(unsigned thread_num = thread::hardware_concurrency())
     {
-        for (size_t i = 0; i < thread_num; ++i)
+        for (unsigned i = 0; i < thread_num; ++i){
             workers.emplace_back([this]{
-                    while (true)
+                while(true){
+                    function<void()> task;
                     {
-                        function<void()> task;
-                        {
-                            unique_lock<mutex> lock(queue_mutex);
-                            while(!stop && tasks.empty())
-                                condition.wait(lock);
-                            //condition.wait(lock, [this]{ return stop || !tasks.empty(); });
-                            if (stop && tasks.empty())
-                                return;
-                            task = move(tasks.front());
-                            tasks.pop();
-                        }
-                        task();
+                        unique_lock<mutex> lock(queue_mutex);
+                        while(!stop && tasks.empty())
+                            condition.wait(lock);
+                        //condition.wait(lock, [this]{ return stop || !tasks.empty(); });
+                        if (stop && tasks.empty())//执行完所有任务才可能退出
+                            return;
+                        task = move(tasks.front());
+                        tasks.pop();
                     }
-                });
+                    task();
+                }
+            });
+        }
     }
     ~ThreadPool()
     {

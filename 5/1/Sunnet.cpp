@@ -1,6 +1,6 @@
 #include <iostream>
-using namespace std;
 #include "Sunnet.h"
+using namespace std;
 
 Sunnet *Sunnet::inst()
 {

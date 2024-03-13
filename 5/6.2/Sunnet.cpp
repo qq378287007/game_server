@@ -6,12 +6,12 @@ Sunnet::Sunnet(unsigned num)
     : WORKER_NUM(num)
 {
 }
-
 Sunnet *Sunnet::inst()
 {
     static Sunnet instance;
     return &instance;
 }
+
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;
@@ -25,15 +25,12 @@ void Sunnet::Start()
 void Sunnet::Wait()
 {
     for (unsigned i = 0; i < WORKER_NUM; i++)
-    {
-        workers[i].SetStop();
         workerThreads[i].join();
-    }
-    workers.clear();
     workerThreads.clear();
+    workers.clear();
 }
 
-unsigned Sunnet::NewService(const string& type)
+unsigned Sunnet::NewService(const string &type)
 {
     shared_ptr<Service> srv(new Service());
     srv->type = type;
@@ -41,7 +38,7 @@ unsigned Sunnet::NewService(const string& type)
     srv->id = maxId++;
     services.emplace(srv->id, srv);
     lock.unlock();
-    srv->OnInit(); 
+    srv->OnInit();
     return srv->id;
 }
 void Sunnet::KillService(unsigned id)
@@ -75,7 +72,7 @@ shared_ptr<Service> Sunnet::PopGlobalQueue()
     {
         srv = globalQueue.front();
         globalQueue.pop();
-        globalLen--;
+        //globalLen--;
     }
     return srv;
 }
@@ -84,7 +81,7 @@ void Sunnet::PushGlobalQueue(shared_ptr<Service> srv)
 {
     lock_guard lock(globalLock);
     globalQueue.push(srv);
-    globalLen++;
+    //globalLen++;
 }
 // 发送消息
 void Sunnet::Send(shared_ptr<BaseMsg> msg)
@@ -97,7 +94,6 @@ void Sunnet::Send(shared_ptr<BaseMsg> msg)
         return;
     }
     toSrv->PushMsg(msg);
-    
     bool hasPush = false;
     toSrv->inGlobalLock.lock();
     if (!toSrv->inGlobal)
@@ -107,30 +103,4 @@ void Sunnet::Send(shared_ptr<BaseMsg> msg)
         hasPush = true;
     }
     toSrv->inGlobalLock.unlock();
-
-    if (hasPush)
-        CheckAndWeakUp();
-}
-
-void Sunnet::CheckAndWeakUp()
-{
-    if (sleepCount != 0 && WORKER_NUM - sleepCount <= globalLen)
-        WeakUp();
-}
-
-void Sunnet::WorkerWait()
-{
-    sleepMtx.lock();
-    sleepCount++;
-    sleepMtx.unlock();
-
-    unique_lock<mutex> lock(sleepMtx);
-    sleepCond.wait(lock);
-    sleepCount--;
-}
-
-void Sunnet::WeakUp()
-{
-    cout << "weakup" << endl;
-    sleepCond.notify_all();
 }

@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+#include "Service.h"
+using namespace std;
 
 struct Worker
 {
@@ -9,4 +12,7 @@ struct Worker
     {
     }
     void operator()();
+
+private:
+    void CheckAndPutGlobal(shared_ptr<Service> srv);
 };

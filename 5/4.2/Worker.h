@@ -8,5 +8,5 @@ struct Worker
         : id(_id), eachNum(_eachNum)
     {
     }
-    void operator()();
+    void operator()(); 
 };

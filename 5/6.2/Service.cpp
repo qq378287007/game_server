@@ -24,7 +24,6 @@ void Service::OnExit()
     cout << "[" << id << "] OnExit" << endl;
 }
 
-// 取出消息
 shared_ptr<BaseMsg> Service::PopMsg()
 {
     lock_guard lock(msg_mtx);
@@ -35,7 +34,6 @@ shared_ptr<BaseMsg> Service::PopMsg()
     msg_queue.pop();
     return msg;
 }
-// 插入消息
 void Service::PushMsg(shared_ptr<BaseMsg> msg)
 {
     msg_mtx.lock();

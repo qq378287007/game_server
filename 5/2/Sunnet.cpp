@@ -2,7 +2,7 @@
 #include "Sunnet.h"
 using namespace std;
 
-Sunnet::Sunnet(size_t num)
+Sunnet::Sunnet(unsigned num)
     : WORKER_NUM(num)
 {
 }
@@ -16,17 +16,25 @@ Sunnet *Sunnet::inst()
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;
-    StartWorker();
+    for (unsigned i = 0; i < WORKER_NUM; i++)
+    {
+        workerThreads.emplace_back(Worker{i, 2U << i});
+
+        // Worker worker{i, 2U << i};
+        // workerThreads.emplace_back(worker);
+
+        Worker worker{i, 2U << i};
+        workerThreads.emplace_back(thread(worker));
+
+        // Worker worker{i, 2U << i};
+        // thread th(worker);
+        // workerThreads.emplace_back(move(th));
+    }
 }
 
 void Sunnet::Wait()
 {
-    for (size_t i = 0; i < WORKER_NUM; i++)
+    for (unsigned i = 0; i < WORKER_NUM; i++)
         workerThreads[i].join();
-}
-
-void Sunnet::StartWorker()
-{
-    for (size_t i = 0; i < WORKER_NUM; i++)
-        workerThreads.emplace_back(Worker{i, (size_t)2 << i});
+    workerThreads.clear();
 }

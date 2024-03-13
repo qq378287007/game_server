@@ -1,9 +1,18 @@
+#include <iostream>
+#include <chrono>
 #include "Sunnet.h"
+using namespace std;
 
 int main()
 {
     Sunnet::inst()->Start();
     Sunnet::inst()->Wait();
+    cout << "Center!\n";
+    this_thread::sleep_for(chrono::seconds(3));
+
+    Sunnet::inst()->Start();
+    Sunnet::inst()->Wait();
+    cout << "Over!\n";
     return 0;
 }
 

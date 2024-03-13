@@ -2,8 +2,8 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "Sunnet.h"
 #include "Worker.h"
+#include "Sunnet.h"
 using namespace std;
 
 void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
@@ -20,38 +20,23 @@ void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
 
 void Worker::operator()()
 {
+    int j = 0;
     while (true)
     {
-
-        {
-            lock_guard<mutex> lock(*stop_mtx);
-            if (stop)
-                return;
-        }
-
-        // if (stop == true)
-        //     return;
-
         shared_ptr<Service> srv = Sunnet::inst()->PopGlobalQueue();
         if (!srv)
         {
-            Sunnet::inst()->WorkerWait();
+            this_thread::sleep_for(chrono::milliseconds(100));
         }
         else
         {
             srv->ProcessMsgs(eachNum);
             CheckAndPutGlobal(srv); // 已kill服务或空服务，不会放入队列中
         }
+
+        cout << "working id: " << id << endl;
+        cout << "current j: " << j << endl;
+        if (++j > 10)
+            return;
     }
-}
-
-void Worker::SetStop()
-{
-    // stop_mtx.lock();
-    stop_mtx->lock();
-    stop = true;
-    stop_mtx->unlock();
-    // stop_mtx.unlock();
-
-    Sunnet::inst()->WeakUp();
 }
