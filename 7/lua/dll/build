@@ -1,5 +1,0 @@
-gcc -shared -fPIC -o liblua.so *.c
-
-gcc *.c -shared -fPIC -o liblua.dll -Wl,--out-implib,liblua.lib
--Wl 表示后面的内容是ld的参数，需要传递给ld。
---out-implib,liblua.lib表示让ld生成一个名为liblua.lib的导入库。
