@@ -10,6 +10,6 @@ struct Conn
     };
 
     unsigned type;
-    int fd;
+    unsigned fd;
     unsigned serviceId;
 };

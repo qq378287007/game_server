@@ -17,7 +17,7 @@ public:
 };
 
 
-class SocketAcceptMsg : BaseMsg // 新连接
+class SocketAcceptMsg : public BaseMsg // 新连接
 {
 public:
     int listenFd;
@@ -25,7 +25,7 @@ public:
     void run() override;
 };
 
-class SocketRWMsg : BaseMsg // 可读可写
+class SocketRWMsg : public BaseMsg // 可读可写
 {
 public:
     int fd;
