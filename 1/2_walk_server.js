@@ -9,34 +9,31 @@ class Role {
 
 var roles = new Map();
 
-var server = net.createServer(function (socket) {
-    //新连接
+var server = net.createServer(function (socket) {//新连接
     roles.set(socket, new Role())
 
-    //接收到数据
-    socket.on('data', function (data) {
+    socket.on('data', function (data) {//接收到数据
         var role = roles.get(socket);
         var cmd = String(data);
-        //更新位置
-        if (cmd == "left\r\n") role.x--;
-        else if (cmd == "right\r\n") role.x++;
-        else if (cmd == "up\r\n") role.y--;
-        else if (cmd == "down\r\n") role.y++;
 
-        //广播
-        for (let s of roles.keys()) {
+        //更新位置
+        if (cmd == "left") role.x--;
+        else if (cmd == "right") role.x++;
+        else if (cmd == "up") role.y--;
+        else if (cmd == "down") role.y++;
+
+        for (let s of roles.keys()) {//广播
             var id = socket.remotePort;
-            var str = id + " move to " + role.x + " " + role.y + "\n";
+            var str = "\r\n" + id + " move to " + role.x + " " + role.y + "\r\n";
             s.write(str);
         }
     });
 
-    //断开连接
-    socket.on('close', function () {
+    socket.on('close', function () {//断开连接
         roles.delete(socket)
     });
 });
 
-server.listen(8001);
+server.listen(8002);
 
-//telnet 127.0.0.1 8001
+//telnet 127.0.0.1 8002

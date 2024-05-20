@@ -9,43 +9,35 @@ class Role {
 
 var roles = new Map();
 
-var server = net.createServer(function (socket) {
-    //新连接
+var server = net.createServer(function (socket) {//新连接
     roles.set(socket, new Role())
 
-    //接收到数据
-    socket.on('data', function (data) {
+    socket.on('data', function (data) {//接收到数据
         var role = roles.get(socket);
         var cmd = String(data);
+        var id = socket.remotePort;
+        var str = "\r\n" + id +": " + data + "\r\n";
+        var flag = true;
+
         //更新位置
-        if (cmd == "left\r\n") role.x--;
-        else if (cmd == "right\r\n") role.x++;
-        else if (cmd == "up\r\n") role.y--;
-        else if (cmd == "down\r\n") role.y++;
-        else {
-            chatSocket.write(data);
-            return;
-        };
-        //广播
-        for (let s of roles.keys()) {
-            var id = socket.remotePort;
-            var str = id + " move to " + role.x + " " + role.y + "\n";
+        if (cmd == "left") role.x--;
+        else if (cmd == "right") role.x++;
+        else if (cmd == "up") role.y--;
+        else if (cmd == "down") role.y++;
+        else flag = false;
+        
+        if(flag)
+            str = "\r\n" + id + " move to " + role.x + " " + role.y + "\r\n";
+
+        for (let s of roles.keys()) //广播
             s.write(str);
-        }
     });
 
-    //断开连接
-    socket.on('close', function () {
+    socket.on('close', function () { //断开连接
         roles.delete(socket)
     });
 });
 
-server.listen(8001);
+server.listen(8002);
 
-
-var chatSocket = net.connect({ port: 8010 }, function () { });
-chatSocket.on('data', function (data) {
-    for (let s of roles.keys()) {
-        s.write(data);
-    }
-});
+//telnet 127.0.0.1 8002
