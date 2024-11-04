@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <queue>
 #include <memory>
@@ -22,8 +23,10 @@ class ThreadPool
 public:
     ThreadPool(unsigned thread_num = thread::hardware_concurrency())
     {
-        for (unsigned i = 0; i < thread_num; ++i){
-            workers.emplace_back([this]{
+        for (unsigned i = 0; i < thread_num; ++i)
+        {
+            workers.emplace_back([this]
+                                 {
                 while(true){
                     function<void()> task;
                     {
@@ -37,10 +40,10 @@ public:
                         tasks.pop();
                     }
                     task();
-                }
-            });
+                } });
         }
     }
+
     ~ThreadPool()
     {
         {
@@ -61,8 +64,9 @@ public:
         {
             unique_lock<mutex> lock(queue_mutex);
             if (stop)
-                throw runtime_error("enqueue on stopped ThreadPool");
-            tasks.emplace([task]() { (*task)(); });
+                throw runtime_error("enqueue on stopped ThreadPool!");
+            tasks.emplace([task]()
+                          { (*task)(); });
         }
         condition.notify_one();
         return res;

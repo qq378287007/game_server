@@ -1,7 +1,7 @@
 #pragma once
+
 #include <thread>
 #include <vector>
-#include "Worker.h"
 using namespace std;
 
 class Sunnet

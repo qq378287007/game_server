@@ -16,7 +16,6 @@ public:
     string buff;   // 消息内容
 };
 
-
 class SocketAcceptMsg : BaseMsg // 新连接
 {
 public:

@@ -2,11 +2,11 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "Worker.h"
 using namespace std;
 
-// 线程函数
-void Worker::operator()()
+#include "Worker.h"
+
+void Worker::operator()() // 线程函数
 {
     while (true)
     {

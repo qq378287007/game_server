@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Service.h"
 using namespace std;
+
+#include "Service.h"
 
 // 创建服务后触发
 void Service::OnInit()
@@ -22,7 +23,7 @@ void Service::OnExit()
 // 取出消息
 shared_ptr<BaseMsg> Service::PopMsg()
 {
-    lock_guard lock(msg_mtx);
+    lock_guard<mutex> lock(msg_mtx);
     if (msg_queue.empty())
         return nullptr;
 

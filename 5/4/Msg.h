@@ -1,10 +1,11 @@
 #pragma once
+
 #include <memory>
 using namespace std;
 
 struct BaseMsg // 消息基类
 {
-    virtual ~BaseMsg(){};
+    virtual ~BaseMsg() {};
 
     enum TYPE // 消息类型
     {

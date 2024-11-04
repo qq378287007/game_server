@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
 
 Sunnet::Sunnet(size_t num)
     : WORKER_NUM(num)
@@ -36,10 +37,12 @@ uint32_t Sunnet::NewService(shared_ptr<string> type)
 {
     shared_ptr<Service> srv(new Service());
     srv->type = type;
+
     unique_lock<shared_mutex> lock(servicesLock);
     srv->id = maxId++;
     services.emplace(srv->id, srv);
     lock.unlock();
+
     srv->OnInit(); // 初始化
     return srv->id;
 }
@@ -56,12 +59,11 @@ void Sunnet::KillService(uint32_t id)
     unique_lock<shared_mutex> lock(servicesLock);
     services.erase(id);
 }
-shared_ptr<Service> Sunnet::GetService(uint32_t id)
+shared_ptr<Service> Sunnet::GetService(uint32_t id) const
 {
-    shared_ptr<Service> srv = nullptr;
     shared_lock<shared_mutex> lock(servicesLock);
     unordered_map<uint32_t, shared_ptr<Service>>::const_iterator iter = services.find(id);
     if (iter != services.cend())
-        srv = iter->second;
-    return srv;
+        return iter->second;
+    return nullptr;
 }

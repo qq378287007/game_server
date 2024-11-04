@@ -1,7 +1,8 @@
 #include <iostream>
 #include <chrono>
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
 
 Sunnet::Sunnet(unsigned num)
     : WORKER_NUM(num)
@@ -17,24 +18,22 @@ Sunnet *Sunnet::inst()
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;
-    for (unsigned i = 0; i < WORKER_NUM; i++){
-        workerThreads.emplace_back([i]{
-            int j = 0;
-            while (true)
+    for (unsigned i = 0; i < WORKER_NUM; i++)
+    {
+        workerThreads.emplace_back([i]
+                                   {
+            for (int j = 0;j<10;j++)
             {
                 cout << "working id: " << i << endl;
                 this_thread::sleep_for(chrono::milliseconds(100));
-
                 cout << "current j: " << j << endl;
-                if(++j > 10)
-                    return;
-            } 
-        });
+            } });
     }
 }
+
 void Sunnet::Wait()
 {
-    for (unsigned i = 0; i < WORKER_NUM; i++)
+    for (unsigned int i = 0; i < WORKER_NUM; i++)
         workerThreads[i].join();
     workerThreads.clear();
 }

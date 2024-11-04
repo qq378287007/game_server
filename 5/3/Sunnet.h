@@ -1,8 +1,10 @@
 #pragma once
+
 #include <thread>
 #include <vector>
-#include "Worker.h"
 using namespace std;
+
+#include "Worker.h"
 
 class Sunnet
 {
@@ -15,7 +17,7 @@ public:
     void Wait();
 
 private:
-    const unsigned WORKER_NUM;                  // 工作线程数
-    vector<Worker> workers;                   // worker对象
+    const unsigned WORKER_NUM;    // 工作线程数
+    vector<Worker> workers;       // worker对象
     vector<thread> workerThreads; // 工作线程
 };

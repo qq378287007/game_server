@@ -1,6 +1,8 @@
 #include <iostream>
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
+#include "Worker.h"
 
 Sunnet::Sunnet(unsigned num)
     : WORKER_NUM(num)
@@ -22,11 +24,8 @@ void Sunnet::Start()
 
         // Worker worker{i, 2U << i};
         // workerThreads.emplace_back(worker);
+        // workerThreads.emplace_back(thread(worker));
 
-        Worker worker{i, 2U << i};
-        workerThreads.emplace_back(thread(worker));
-
-        // Worker worker{i, 2U << i};
         // thread th(worker);
         // workerThreads.emplace_back(move(th));
     }

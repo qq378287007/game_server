@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
 
 Sunnet::Sunnet(unsigned num)
     : WORKER_NUM(num)
@@ -28,4 +29,5 @@ void Sunnet::Wait()
     for (unsigned i = 0; i < WORKER_NUM; i++)
         workerThreads[i].join();
     workerThreads.clear();
+    workers.clear();
 }

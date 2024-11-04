@@ -1,11 +1,13 @@
 #pragma once
+
 #include <thread>
 #include <vector>
 #include <unordered_map>
 #include <shared_mutex>
+using namespace std;
+
 #include "Worker.h"
 #include "Service.h"
-using namespace std;
 
 class Sunnet
 {
@@ -18,7 +20,7 @@ public:
     static Sunnet *inst();
     void Start();
     void Wait();
-    
+
 private:
     const size_t WORKER_NUM;      // 工作线程数
     vector<Worker> workers;       // worker对象
@@ -44,7 +46,7 @@ private:
     queue<shared_ptr<Service>> globalQueue;
     int globalLen{0}; // 队列长度
     mutex globalLock; // 锁
-    
+
 public:
     // 全局队列操作
     shared_ptr<Service> PopGlobalQueue();

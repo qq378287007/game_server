@@ -2,9 +2,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+using namespace std;
+
 #include "Worker.h"
 #include "Sunnet.h"
-using namespace std;
 
 // 那些调Sunnet的通过传参数解决
 // 状态是不在队列中，global=true
@@ -14,11 +15,11 @@ void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
     if (srv->isExiting)
         return;
 
-    lock_guard lock(srv->msg_mtx);
-    if (!srv->msg_queue.empty())              // 重新放回全局队列
+    lock_guard<mutex> lock(srv->msg_mtx);
+    if (srv->msg_queue.empty())
+        srv->SetInGlobal(false);              // 不在队列中，重设inGlobal
+    else                                      // 重新放回全局队列
         Sunnet::inst()->PushGlobalQueue(srv); // 此时srv->inGlobal一定是true
-    else
-        srv->SetInGlobal(false); // 不在队列中，重设inGlobal
 }
 
 // 线程函数
