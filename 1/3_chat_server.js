@@ -11,11 +11,11 @@ var server = net.createServer(function (socket) {//新连接
             s.write("\r\n" + id + ": " + data + "\r\n");
         }
     });
-/*
+
     socket.on('close', function () {//断开连接
         scenes.delete(socket)
     });
-*/
+
 });
 
 server.listen(8010);

@@ -13,10 +13,11 @@ var server = net.createServer(function (socket) {//新连接
     roles.set(socket, new Role())
 
     socket.on('data', function (data) {//接收到数据
-        var role = roles.get(socket);
-        var cmd = String(data);
         var id = socket.remotePort;
         var str = "\r\n" + id +": " + data + "\r\n";
+        
+        var role = roles.get(socket);
+        var cmd = String(data);
         var flag = true;
 
         //更新位置
