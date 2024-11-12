@@ -1,0 +1,18 @@
+gcc *.c -shared -fPIC -o liblua.dll
+
+gcc *.c -shared -fPIC -o liblua.dll -Wl,--out-implib,liblua.lib
+//-Wl表示后面的内容是作为参数传递给链接器ld的。
+//--out-implib,liblua.lib表示让ld生成一个名为liblua.lib的导入库。
+
+//ld --out-implib liblua.lib liblua.dll
+//dlltool --dllname liblua.dll --output-lib liblua.lib
+
+gcc -o lua.exe main/lua.c src/*.c -Iinclude & lua.exe
+
+gcc -o luac.exe main/luac.c src/*.c -Iinclude & luac.exe
+
+g++ -o main/init1.exe main/init1.cpp src/*.c -Iinclude & cd main & init1.exe 
+
+gcc -o main/init1.exe main/init1.c src/*.c -Iinclude & cd main & init1.exe 
+
+g++ -o main/init2.exe main/init2.cpp src/*.c -Iinclude & cd main & init2.exe 

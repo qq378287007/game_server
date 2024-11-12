@@ -1,14 +1,17 @@
 #include <string>
 #include <iostream>
 #include <memory>
-#include "lua.hpp"
 using namespace std;
+
+#include "lua.hpp"
 
 int NewService(lua_State *luaState)
 {
-    int num = lua_gettop(luaState); // 栈顶元素索引|栈上元素个数（参数个数）
+    // 栈顶元素索引|栈上元素个数（参数个数），1
+    int num = lua_gettop(luaState);
 
-    if (lua_isstring(luaState, 1) == 0) // 是否字符串或数字（数字总能转换成字符串），1:是 0:不是
+    // 是否字符串或数字（数字总能转换成字符串），1:是 0:不是
+    if (lua_isstring(luaState, 1) == 0)
     {
         lua_pushinteger(luaState, -1);
         return 1;
@@ -28,6 +31,7 @@ int NewService(lua_State *luaState)
     lua_pushinteger(luaState, id++); // 返回值
     return 1;
 }
+
 void Register(lua_State *luaState)
 {
     static luaL_Reg lualibs[] = {

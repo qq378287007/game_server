@@ -11,6 +11,12 @@ function OnInit(id)
 
     local pong = sunnet.NewService("pong")
     print("[lua] new service pong: "..pong)
+
+    local num = sunnet.NewService(1111)
+    print("[lua] new service num: "..num)
+
+    local unknown = sunnet.NewService(nil)
+    print("[lua] new service unknown: "..unknown)
 end
 
 function OnExit()

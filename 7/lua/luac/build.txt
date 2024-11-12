@@ -1,1 +1,0 @@
-gcc luac.c liblua.dll -o luac.exe

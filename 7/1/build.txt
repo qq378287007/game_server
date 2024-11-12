@@ -1,0 +1,1 @@
+g++ -o main/run.exe main/*.cpp src/*.c -Iinclude -std=c++17 & cd main & run.exe 

@@ -1,1 +1,0 @@
-gcc lua.c liblua.dll -o lua.exe
