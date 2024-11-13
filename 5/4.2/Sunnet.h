@@ -12,10 +12,17 @@ using namespace std;
 class Sunnet
 {
 private:
-    Sunnet(unsigned num = thread::hardware_concurrency());
+    Sunnet(unsigned num = thread::hardware_concurrency())
+        : WORKER_NUM(num) {}
 
 public:
-    static Sunnet *inst();
+    static Sunnet *inst()
+    {
+        static Sunnet instance;
+        return &instance;
+    }
+
+public:
     void Start();
     void Wait();
 

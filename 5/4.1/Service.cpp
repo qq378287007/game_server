@@ -1,33 +1,12 @@
 #include <iostream>
-#include "Sunnet.h"
-#include "Service.h"
 using namespace std;
 
-// 创建服务后触发
-void Service::OnInit()
-{
-    cout << "[" << id << "] OnInit" << endl;
-}
-// 收到消息时触发
-void Service::OnMsg(shared_ptr<BaseMsg> msg)
-{
-    cout << "[" << id << "] OnMsg" << endl;
-    msg->run();
-
-    this_thread::sleep_for(chrono::milliseconds(100));
-    shared_ptr<BaseMsg> msgRet(new BaseMsg(id, msg->from, "ping"));
-    Sunnet::inst()->Send(msgRet);
-}
-// 退出服务时触发
-void Service::OnExit()
-{
-    cout << "[" << id << "] OnExit" << endl;
-}
+#include "Service.h"
 
 // 取出消息
 shared_ptr<BaseMsg> Service::PopMsg()
 {
-    lock_guard lock(msg_mtx);
+    lock_guard<mutex> lock(msg_mtx);
     if (msg_queue.empty())
         return nullptr;
 
@@ -35,6 +14,25 @@ shared_ptr<BaseMsg> Service::PopMsg()
     msg_queue.pop();
     return msg;
 }
+
+// 创建服务后触发
+void Service::OnInit()
+{
+    cout << "[" << id << "] OnInit" << endl;
+}
+
+// 收到消息时触发
+void Service::OnMsg(shared_ptr<BaseMsg> msg)
+{
+    cout << "[" << id << "] OnMsg" << endl;
+}
+
+// 退出服务时触发
+void Service::OnExit()
+{
+    cout << "[" << id << "] OnExit" << endl;
+}
+
 // 插入消息
 void Service::PushMsg(shared_ptr<BaseMsg> msg)
 {
@@ -42,6 +40,7 @@ void Service::PushMsg(shared_ptr<BaseMsg> msg)
     msg_queue.push(msg);
     msg_mtx.unlock();
 }
+
 bool Service::ProcessMsg()
 {
     shared_ptr<BaseMsg> msg = PopMsg();
@@ -51,16 +50,10 @@ bool Service::ProcessMsg()
     OnMsg(msg);
     return true;
 }
+
 void Service::ProcessMsgs(int max)
 {
     for (int i = 0; i < max; i++)
         if (!ProcessMsg())
             return;
-}
-
-void Service::SetInGlobal(bool isIn)
-{
-    inGlobalLock.lock();
-    inGlobal = isIn;
-    inGlobalLock.unlock();
 }

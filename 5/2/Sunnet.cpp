@@ -1,19 +1,8 @@
 #include <iostream>
 using namespace std;
 
-#include "Sunnet.h"
 #include "Worker.h"
-
-Sunnet::Sunnet(unsigned num)
-    : WORKER_NUM(num)
-{
-}
-
-Sunnet *Sunnet::inst()
-{
-    static Sunnet instance;
-    return &instance;
-}
+#include "Sunnet.h"
 
 void Sunnet::Start()
 {

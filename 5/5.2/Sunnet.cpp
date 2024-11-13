@@ -1,16 +1,7 @@
 #include <iostream>
-#include "Sunnet.h"
 using namespace std;
 
-Sunnet::Sunnet(unsigned num)
-    : WORKER_NUM(num)
-{
-}
-Sunnet *Sunnet::inst()
-{
-    static Sunnet instance;
-    return &instance;
-}
+#include "Sunnet.h"
 
 void Sunnet::Start()
 {
@@ -34,10 +25,12 @@ unsigned Sunnet::NewService(const string &type)
 {
     shared_ptr<Service> srv(new Service());
     srv->type = type;
+
     unique_lock<shared_mutex> lock(servicesLock);
     srv->id = maxId++;
     services.emplace(srv->id, srv);
     lock.unlock();
+
     srv->OnInit();
     return srv->id;
 }
@@ -55,12 +48,11 @@ void Sunnet::KillService(unsigned id)
 }
 shared_ptr<Service> Sunnet::GetService(unsigned id)
 {
-    shared_ptr<Service> srv = nullptr;
     shared_lock<shared_mutex> lock(servicesLock);
     unordered_map<unsigned, shared_ptr<Service>>::const_iterator iter = services.find(id);
     if (iter != services.cend())
-        srv = iter->second;
-    return srv;
+        return iter->second;
+    return nullptr;
 }
 
 // 弹出全局队列
@@ -72,7 +64,7 @@ shared_ptr<Service> Sunnet::PopGlobalQueue()
     {
         srv = globalQueue.front();
         globalQueue.pop();
-        //globalLen--;
+        // globalLen--;
     }
     return srv;
 }
@@ -81,7 +73,7 @@ void Sunnet::PushGlobalQueue(shared_ptr<Service> srv)
 {
     lock_guard lock(globalLock);
     globalQueue.push(srv);
-    //globalLen++;
+    // globalLen++;
 }
 // 发送消息
 void Sunnet::Send(shared_ptr<BaseMsg> msg)
@@ -94,13 +86,13 @@ void Sunnet::Send(shared_ptr<BaseMsg> msg)
         return;
     }
     toSrv->PushMsg(msg);
-    bool hasPush = false;
+    // bool hasPush = false;
     toSrv->inGlobalLock.lock();
     if (!toSrv->inGlobal)
     {
         PushGlobalQueue(toSrv);
         toSrv->inGlobal = true;
-        hasPush = true;
+        // hasPush = true;
     }
     toSrv->inGlobalLock.unlock();
 }

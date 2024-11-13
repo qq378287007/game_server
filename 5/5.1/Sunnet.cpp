@@ -3,16 +3,6 @@ using namespace std;
 
 #include "Sunnet.h"
 
-Sunnet::Sunnet(size_t num)
-    : WORKER_NUM(num)
-{
-}
-Sunnet *Sunnet::inst()
-{
-    static Sunnet instance;
-    return &instance;
-}
-
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;
@@ -59,11 +49,54 @@ void Sunnet::KillService(uint32_t id)
     unique_lock<shared_mutex> lock(servicesLock);
     services.erase(id);
 }
-shared_ptr<Service> Sunnet::GetService(uint32_t id) const
+shared_ptr<Service> Sunnet::GetService(uint32_t id)
 {
     shared_lock<shared_mutex> lock(servicesLock);
     unordered_map<uint32_t, shared_ptr<Service>>::const_iterator iter = services.find(id);
     if (iter != services.cend())
         return iter->second;
     return nullptr;
+}
+
+// 弹出全局队列
+shared_ptr<Service> Sunnet::PopGlobalQueue()
+{
+    shared_ptr<Service> srv = nullptr;
+    lock_guard lock(globalLock);
+    if (!globalQueue.empty())
+    {
+        srv = globalQueue.front();
+        globalQueue.pop();
+        globalLen--;
+    }
+    return srv;
+}
+// 插入全局队列
+void Sunnet::PushGlobalQueue(shared_ptr<Service> srv)
+{
+    lock_guard<mutex> lock(globalLock);
+    globalQueue.push(srv);
+    globalLen++;
+}
+// 发送消息
+void Sunnet::Send(uint32_t toId, shared_ptr<BaseMsg> msg)
+{
+    shared_ptr<Service> toSrv = GetService(toId);
+    if (!toSrv)
+    {
+        cout << "Send fail, toSrv not exist toId: " << toId << endl;
+        return;
+    }
+    toSrv->PushMsg(msg);
+    // 检查并放入全局队列
+    // 为缩小临界区灵活控制，破坏封装性
+    bool hasPush = false;
+    toSrv->inGlobalLock.lock();
+    if (!toSrv->inGlobal)
+    {
+        PushGlobalQueue(toSrv);
+        toSrv->inGlobal = true;
+        hasPush = true;
+    }
+    toSrv->inGlobalLock.unlock();
 }

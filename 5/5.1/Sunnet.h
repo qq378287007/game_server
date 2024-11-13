@@ -12,12 +12,27 @@ using namespace std;
 class Sunnet
 {
 private:
-    Sunnet(size_t num = thread::hardware_concurrency());
+    Sunnet(size_t num = thread::hardware_concurrency())
+        : WORKER_NUM(num) {}
 
 public:
     // 仅测试用，buff须由new产生
-    static shared_ptr<BaseMsg> MakeMsg(uint32_t source, char *buff, int len);
-    static Sunnet *inst();
+    static shared_ptr<BaseMsg> MakeMsg(uint32_t source, char *buff, int len)
+    {
+        shared_ptr<ServiceMsg> msg(new ServiceMsg());
+        msg->type = BaseMsg::TYPE::SERVICE;
+        msg->source = source;
+        msg->buff = shared_ptr<char>(buff);
+        msg->size = len;
+        return msg;
+    }
+    static Sunnet *inst()
+    {
+        static Sunnet instance;
+        return &instance;
+    }
+
+public:
     void Start();
     void Wait();
 

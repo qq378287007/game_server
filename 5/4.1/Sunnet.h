@@ -12,10 +12,17 @@ using namespace std;
 class Sunnet
 {
 private:
-    Sunnet(size_t num = thread::hardware_concurrency());
+    Sunnet(size_t num = thread::hardware_concurrency())
+        : WORKER_NUM(num) {}
 
 public:
-    static Sunnet *inst();
+    static Sunnet *inst()
+    {
+        static Sunnet instance;
+        return &instance;
+    }
+
+public:
     void Start();
     void Wait();
 
@@ -29,7 +36,7 @@ private:
 private:
     // 服务列表
     unordered_map<uint32_t, shared_ptr<Service>> services;
-    uint32_t maxId{0};         // 最大ID
+    uint32_t maxId{0};                 // 最大ID
     mutable shared_mutex servicesLock; // 读写锁
 public:
     // 增删服务

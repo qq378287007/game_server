@@ -1,17 +1,19 @@
 #pragma once
+
 #include <queue>
 #include <thread>
 #include <mutex>
 #include <memory>
-#include "Msg.h"
 using namespace std;
+
+#include "Msg.h"
 
 struct Service
 {
 public:
-    unsigned id;             // 唯一id
-    string type; // 类型
-    bool isExiting{false};   // 是否正在退出
+    unsigned id;           // 唯一id
+    string type;           // 类型
+    bool isExiting{false}; // 是否正在退出
 
     // 消息列表
     queue<shared_ptr<BaseMsg>> msg_queue;

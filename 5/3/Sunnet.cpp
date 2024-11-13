@@ -3,17 +3,6 @@ using namespace std;
 
 #include "Sunnet.h"
 
-Sunnet::Sunnet(unsigned num)
-    : WORKER_NUM(num)
-{
-}
-
-Sunnet *Sunnet::inst()
-{
-    static Sunnet instance;
-    return &instance;
-}
-
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;

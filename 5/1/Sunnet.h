@@ -2,7 +2,6 @@
 
 class Sunnet
 {
-private:
     Sunnet() {}
 
 public:

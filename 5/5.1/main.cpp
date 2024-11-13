@@ -16,7 +16,7 @@ void test()
     shared_ptr<BaseMsg> msg2 = Sunnet::inst()->MakeMsg(ping2, new char[6]{'h', 'e', 'l', 'l', 'o', '\0'}, 6);
     Sunnet::inst()->Send(pong, msg2);
 
-    this_thread::sleep_for(chrono::seconds(1));
+    this_thread::sleep_for(chrono::seconds(3));
     Sunnet::inst()->KillService(ping1);
     Sunnet::inst()->KillService(ping2);
     Sunnet::inst()->KillService(pong);
@@ -30,4 +30,4 @@ int main()
     return 0;
 }
 
-// g++ *.cpp & a.exe
+// g++ *.cpp -std=c++17 & a.exe

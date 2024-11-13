@@ -12,9 +12,7 @@ struct BaseMsg // 消息基类
 
     virtual ~BaseMsg() {}
     BaseMsg(unsigned _from = -1, unsigned _to = -1, const string &_buff = "")
-        : from(_from), to(_to), buff(_buff)
-    {
-    }
+        : from(_from), to(_to), buff(_buff) {}
     virtual void run()
     {
         cout << "From " << from << " To " << to << ", Buff: " << buff << endl;

@@ -11,7 +11,7 @@ struct BaseMsg // 消息基类
     {
         SERVICE = 1,
     };
-    uint8_t type;      // 消息类型
+    TYPE type;         // 消息类型
     char load[999999]; // 用于检测内存泄漏
 };
 
