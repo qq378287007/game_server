@@ -1,7 +1,9 @@
 #pragma once
+
 #include <queue>
 #include <thread>
 using namespace std;
+
 #include "Msg.h"
 
 class Service

@@ -21,4 +21,4 @@ int main()
     return 0;
 }
 
-// g++ *.cpp & a.exe
+// g++ *.cpp -std=c++17 & a.exe

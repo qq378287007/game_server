@@ -2,9 +2,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "Worker.h"
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
+#include "Worker.h"
 
 void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
 {
@@ -20,9 +21,11 @@ void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
 
 void Worker::operator()()
 {
-    int j = 0;
-    while (true)
+
+    for (int j = 0; j < 10; j++)
     {
+        cout << "working id: " << id << endl;
+        cout << "current j: " << j << endl;
         shared_ptr<Service> srv = Sunnet::inst()->PopGlobalQueue();
         if (!srv)
         {
@@ -33,10 +36,5 @@ void Worker::operator()()
             srv->ProcessMsgs(eachNum);
             CheckAndPutGlobal(srv); // 已kill服务或空服务，不会放入队列中
         }
-
-        cout << "working id: " << id << endl;
-        cout << "current j: " << j << endl;
-        if (++j > 10)
-            return;
     }
 }

@@ -48,10 +48,12 @@ uint32_t Sunnet::NewService(shared_ptr<string> type)
 {
     shared_ptr<Service> srv(new Service());
     srv->type = type;
+
     pthread_rwlock_wrlock(&servicesLock);
     srv->id = maxId++;
     services.emplace(srv->id, srv);
     pthread_rwlock_unlock(&servicesLock);
+
     srv->OnInit(); // 初始化
     return srv->id;
 }

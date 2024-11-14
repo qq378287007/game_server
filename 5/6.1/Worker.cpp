@@ -2,9 +2,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+using namespace std;
+
 #include "Sunnet.h"
 #include "Worker.h"
-using namespace std;
 
 void Worker::CheckAndPutGlobal(shared_ptr<Service> srv)
 {
@@ -28,7 +29,6 @@ void Worker::operator()()
             if (stop)
                 return;
         }
-
         // if (stop == true)
         //     return;
 

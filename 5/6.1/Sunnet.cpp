@@ -3,16 +3,6 @@ using namespace std;
 
 #include "Sunnet.h"
 
-Sunnet::Sunnet(unsigned num)
-    : WORKER_NUM(num)
-{
-}
-
-Sunnet *Sunnet::inst()
-{
-    static Sunnet instance;
-    return &instance;
-}
 void Sunnet::Start()
 {
     cout << "Hello Sunnet" << endl;
@@ -34,15 +24,17 @@ void Sunnet::Wait()
     workerThreads.clear();
 }
 
-unsigned Sunnet::NewService(const string& type)
+unsigned Sunnet::NewService(const string &type)
 {
     shared_ptr<Service> srv(new Service());
     srv->type = type;
+
     unique_lock<shared_mutex> lock(servicesLock);
     srv->id = maxId++;
     services.emplace(srv->id, srv);
     lock.unlock();
-    srv->OnInit(); 
+
+    srv->OnInit();
     return srv->id;
 }
 void Sunnet::KillService(unsigned id)
@@ -59,12 +51,11 @@ void Sunnet::KillService(unsigned id)
 }
 shared_ptr<Service> Sunnet::GetService(unsigned id)
 {
-    shared_ptr<Service> srv = nullptr;
     shared_lock<shared_mutex> lock(servicesLock);
     unordered_map<unsigned, shared_ptr<Service>>::const_iterator iter = services.find(id);
     if (iter != services.cend())
-        srv = iter->second;
-    return srv;
+        return iter->second;
+    return nullptr;
 }
 
 // 弹出全局队列
@@ -98,7 +89,7 @@ void Sunnet::Send(shared_ptr<BaseMsg> msg)
         return;
     }
     toSrv->PushMsg(msg);
-    
+
     bool hasPush = false;
     toSrv->inGlobalLock.lock();
     if (!toSrv->inGlobal)

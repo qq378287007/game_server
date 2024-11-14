@@ -1,6 +1,8 @@
 #pragma once
+
 #include <thread>
 using namespace std;
+
 #include "Service.h"
 
 struct Worker

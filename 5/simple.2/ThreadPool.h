@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <queue>
 #include <memory>
@@ -12,8 +13,9 @@
 #include <unordered_map>
 #include <shared_mutex>
 #include <chrono>
-#include "Service.h"
 using namespace std;
+
+#include "Service.h"
 
 class ThreadPool
 {
@@ -32,7 +34,7 @@ private:
     // 全局队列
     queue<shared_ptr<Service>> global_queue;
     unsigned global_len{0}; // 队列长度
-    mutex global_mtx;  // 锁
+    mutex global_mtx;       // 锁
 
     // 休眠和唤醒
     mutex sleep_mtx;
@@ -41,12 +43,10 @@ private:
 
 public:
     ThreadPool(unsigned num = thread::hardware_concurrency())
-        : WORKER_NUM(num)
-    {
-    }
+        : WORKER_NUM(num) {}
 
     // 增删服务
-    unsigned AddService(const string& type)
+    unsigned AddService(const string &type)
     {
         shared_ptr<Service> srv(new Service());
         srv->type = type;
@@ -67,8 +67,8 @@ public:
             return;
 
         srv->isExiting = true;
-        srv->OnExit(); 
-        
+        srv->OnExit();
+
         unique_lock<shared_mutex> lock(services_mtx);
         services.erase(id);
         lock.unlock();
@@ -152,7 +152,7 @@ private:
         cout << "weakup" << endl;
         sleep_cv.notify_all();
     }
-    
+
     void CheckAndWeakUp()
     {
         if (sleep_count != 0 && WORKER_NUM - sleep_count <= global_len)
@@ -179,7 +179,8 @@ public:
 
         for (unsigned i = 0; i < WORKER_NUM; ++i)
         {
-            workerThreads.emplace_back([this]{
+            workerThreads.emplace_back([this]
+                                       {
                 while (true)
                 {
                     {
@@ -198,8 +199,7 @@ public:
                         srv->ProcessMsg();
                         CheckAndPutGlobal(srv);
                     }
-                } 
-            });
+                } });
         }
     }
     void Wait()

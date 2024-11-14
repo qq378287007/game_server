@@ -9,9 +9,9 @@ void test()
     uint32_t pong = Sunnet::inst()->NewService(pingType);
 
     shared_ptr<BaseMsg> msg1 = Sunnet::inst()->MakeMsg(ping1, new char[3]{'h', 'i', '\0'}, 3);
-    shared_ptr<BaseMsg> msg2 = Sunnet::inst()->MakeMsg(ping2, new char[6]{'h', 'e', 'l', 'l', 'o', '\0'}, 6);
-
     Sunnet::inst()->Send(pong, msg1);
+
+    shared_ptr<BaseMsg> msg2 = Sunnet::inst()->MakeMsg(ping2, new char[6]{'h', 'e', 'l', 'l', 'o', '\0'}, 6);
     Sunnet::inst()->Send(pong, msg2);
 }
 

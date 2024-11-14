@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <queue>
 #include <memory>
@@ -12,8 +13,9 @@
 #include <unordered_map>
 #include <shared_mutex>
 #include <chrono>
-#include "Service.h"
 using namespace std;
+
+#include "Service.h"
 
 class ThreadPool
 {
@@ -47,7 +49,8 @@ public:
 
         for (size_t i = 0; i < WORKER_NUM; ++i)
         {
-            workers.emplace_back([this]{
+            workers.emplace_back([this]
+                                 {
                     while (true)
                     {
                         {
@@ -66,8 +69,7 @@ public:
                             srv->ProcessMsg();
                             CheckAndPutGlobal(srv);
                         }
-                    } 
-                });
+                    } });
         }
     }
 
@@ -154,7 +156,7 @@ public:
         sleep_mtx.lock();
         sleep_count++;
         sleep_mtx.unlock();
-        
+
         unique_lock<mutex> lock(sleep_mtx);
         sleep_cv.wait(lock);
         sleep_count--;

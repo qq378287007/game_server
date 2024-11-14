@@ -13,10 +13,17 @@ using namespace std;
 class Sunnet
 {
 private:
-    Sunnet(unsigned num = thread::hardware_concurrency());
+    Sunnet(unsigned num = thread::hardware_concurrency())
+        : WORKER_NUM(num) {}
 
 public:
-    static Sunnet *inst();
+    static Sunnet *inst()
+    {
+        static Sunnet instance;
+        return &instance;
+    }
+
+public:
     void Start();
     void Wait();
 
@@ -32,7 +39,7 @@ private:
     shared_mutex servicesLock; // 读写锁
 public:
     // 增删服务
-    unsigned NewService(const string& type);
+    unsigned NewService(const string &type);
     void KillService(unsigned id); // 仅限服务自己调用
 private:
     // 获取服务
@@ -42,7 +49,7 @@ private:
     // 全局队列
     queue<shared_ptr<Service>> globalQueue;
     unsigned globalLen{0}; // 队列长度
-    mutex globalLock; // 锁
+    mutex globalLock;      // 锁
 public:
     // 全局队列操作
     shared_ptr<Service> PopGlobalQueue();

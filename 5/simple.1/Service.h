@@ -1,12 +1,15 @@
 #pragma once
+
 #include <queue>
 #include <thread>
+using namespace std;
+
 #include <mutex>
 #include "Msg.h"
-using namespace std;
 
 struct Service
 {
+private:
     shared_ptr<BaseMsg> PopMsg(); // 取出一条消息
 
 public:

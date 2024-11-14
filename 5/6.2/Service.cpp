@@ -1,7 +1,8 @@
 #include <iostream>
+using namespace std;
+
 #include "Sunnet.h"
 #include "Service.h"
-using namespace std;
 
 // 创建服务后触发
 void Service::OnInit()

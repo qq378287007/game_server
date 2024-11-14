@@ -1,5 +1,7 @@
-#include <iostream>
 #include <unistd.h>
+#include <iostream>
+using namespace std;
+
 #include "Sunnet.h"
 #include "Service.h"
 

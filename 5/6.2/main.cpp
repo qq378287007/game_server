@@ -1,6 +1,7 @@
 #include <string>
-#include "Sunnet.h"
 using namespace std;
+
+#include "Sunnet.h"
 
 void test()
 {
@@ -10,8 +11,8 @@ void test()
     unsigned pong = Sunnet::inst()->NewService(pingType);
 
     shared_ptr<BaseMsg> msg1(new BaseMsg(pong, ping1, "hi"));
-    shared_ptr<BaseMsg> msg2(new BaseMsg(pong, ping2, "hello"));
     Sunnet::inst()->Send(msg1);
+    shared_ptr<BaseMsg> msg2(new BaseMsg(pong, ping2, "hello"));
     Sunnet::inst()->Send(msg2);
 
     this_thread::sleep_for(chrono::seconds(3));
@@ -28,4 +29,4 @@ int main()
     return 0;
 }
 
-// g++ *.cpp & a.exe
+// g++ *.cpp -std=c++17 & a.exe

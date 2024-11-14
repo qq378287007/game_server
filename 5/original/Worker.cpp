@@ -1,6 +1,7 @@
-#include <iostream>
 #include <unistd.h>
+#include <iostream>
 using namespace std;
+
 #include "Sunnet.h"
 #include "Worker.h"
 
@@ -37,7 +38,7 @@ void Worker::operator()()
             CheckAndPutGlobal(srv);
         }
 
-        //cout << "working id: " << id << endl;
-        //usleep(100000);
+        // cout << "working id: " << id << endl;
+        // usleep(100000);
     }
 }

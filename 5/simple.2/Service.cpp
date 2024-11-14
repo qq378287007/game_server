@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Service.h"
 using namespace std;
+
+#include "Service.h"
 
 // 创建服务后触发
 void Service::OnInit()
@@ -14,7 +15,7 @@ void Service::OnMsg(shared_ptr<BaseMsg> msg)
     msg->run();
 
     this_thread::sleep_for(chrono::milliseconds(100));
-    //pool.Send(make_shared<BaseMsg>(id, msg->from, "ping"));
+    // pool.Send(make_shared<BaseMsg>(id, msg->from, "ping"));
 }
 // 退出服务时触发
 void Service::OnExit()

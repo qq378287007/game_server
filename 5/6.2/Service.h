@@ -1,10 +1,12 @@
 #pragma once
+
 #include <queue>
 #include <thread>
 #include <mutex>
 #include <memory>
-#include "Msg.h"
 using namespace std;
+
+#include "Msg.h"
 
 struct Service
 {
